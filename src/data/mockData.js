@@ -8,9 +8,9 @@
 /** Social media metric cards */
 export const metricCards = [
     { id: 1, platform: 'LinkedIn', icon: '/assets/010-linkedin.png', value: '9.3k', label: 'Amazing mates', color: '#0077b5' },
-    { id: 2, platform: 'YouTube', icon: 'youtube', value: '24k', label: 'Lessons Views', color: '#ff0000' },
-    { id: 3, platform: 'Instagram', icon: 'instagram', value: '608', label: 'New subscribers', color: '#e4405f' },
-    { id: 4, platform: 'TikTok', icon: 'tiktok', value: '2.5k', label: 'Stream audience', color: '#000000' },
+    { id: 2, platform: 'YouTube', icon: '/assets/youtube.png', value: '24k', label: 'Lessons Views', color: '#ff0000' },
+    { id: 3, platform: 'Instagram', icon: '/assets/instagram.png', value: '608', label: 'New subscribers', color: '#e4405f' },
+    { id: 4, platform: 'TikTok', icon: '/assets/tiktok.png', value: '2.5k', label: 'Stream audience', color: '#000000' },
 ];
 
 /** Highlights / sales summary data */

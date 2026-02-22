@@ -11,23 +11,27 @@ import { metricCards, highlightsData, earningsData, meetingData, teamsData } fro
 /** Metric Card displaying social media stats */
 const MetricCard = ({ card }) => {
     const renderIcon = (icon) => {
-        // If the icon path exists in our assets, show the image
-        if (icon === '/assets/010-linkedin.png') {
-            return <img src={icon} alt="LinkedIn" style={{ width: '20px', height: '20px' }} />;
+        // If it's a path to an image, render an img tag
+        if (typeof icon === 'string' && icon.startsWith('/')) {
+            return <img src={icon} alt="" style={{ width: '20px', height: '20px', objectFit: 'contain' }} />;
         }
 
-        // Fallback for other hardcoded identifiers
-        if (icon === 'linkedin') return '💼';
-        if (icon === 'youtube') return '▶️';
-        if (icon === 'instagram') return '📷';
-        if (icon === 'tiktok') return '🎵';
+        // Fallback emojis for specific platform names
+        const fallbacks = {
+            linkedin: '💼',
+            youtube: '▶️',
+            instagram: '📷',
+            tiktok: '🎵'
+        };
 
-        return icon;
+        return fallbacks[icon] || icon;
     };
 
     return (
         <div className="metric-card">
-            <div className={`metric-icon ${card.icon.includes('/') ? 'has-img' : card.icon}`}>
+            <div
+                className={`metric-icon ${card.icon.includes('/') ? 'has-img' : card.icon}`}
+            >
                 {renderIcon(card.icon)}
             </div>
             <div>
@@ -232,7 +236,7 @@ const MeetingCard = () => (
                 <h3 className="card-title" style={{ margin: 0 }}>{meetingData.title}</h3>
                 <p className="meeting-time">{meetingData.time}</p>
             </div>
-            <div className="meeting-icon">📹</div>
+            <div className="meeting-icon"><img src="/assets/zoom-app.png" alt="Zoom" /></div>
         </div>
         <p className="meeting-desc">{meetingData.description}</p>
         <div className="meeting-details">

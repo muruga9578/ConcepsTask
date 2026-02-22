@@ -6,50 +6,47 @@ import React, { useState } from 'react';
 
 const Registration = () => {
     const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
+        fullName: '',
         email: '',
-        phone: '',
-        company: '',
+        contactNumber: '',
         department: '',
-        designation: '',
-        address: '',
-        city: '',
         state: '',
-        zipCode: '',
-        country: '',
+        city: '',
+        address: '',
+        currentlyWorking: 'yes',
+        experience: [],
     });
     const [errors, setErrors] = useState({});
     const [submitted, setSubmitted] = useState(false);
 
-    /**
-     * Validate all form fields
-     */
     const validate = () => {
         const newErrors = {};
-        const required = ['firstName', 'lastName', 'email', 'phone'];
+        const required = ['fullName', 'email', 'contactNumber', 'department', 'state', 'city'];
 
         required.forEach((field) => {
-            if (!formData[field].trim()) {
-                newErrors[field] = `${field.replace(/([A-Z])/g, ' $1').replace(/^./, (s) => s.toUpperCase())} is required`;
+            if (!formData[field] || (typeof formData[field] === 'string' && !formData[field].trim())) {
+                newErrors[field] = 'Required';
             }
         });
-
-        if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-            newErrors.email = 'Please enter a valid email address';
-        }
-
-        if (formData.phone && !/^[0-9+ -]{8,15}$/.test(formData.phone)) {
-            newErrors.phone = 'Please enter a valid phone number';
-        }
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        const { name, value, type, checked } = e.target;
+        if (type === 'checkbox') {
+            const newExperience = [...formData.experience];
+            if (checked) {
+                newExperience.push(value);
+            } else {
+                const index = newExperience.indexOf(value);
+                if (index > -1) newExperience.splice(index, 1);
+            }
+            setFormData((prev) => ({ ...prev, experience: newExperience }));
+        } else {
+            setFormData((prev) => ({ ...prev, [name]: value }));
+        }
         if (errors[name]) {
             setErrors((prev) => ({ ...prev, [name]: '' }));
         }
@@ -63,154 +60,177 @@ const Registration = () => {
         }
     };
 
-    const handleReset = () => {
-        setFormData({
-            firstName: '',
-            lastName: '',
-            email: '',
-            phone: '',
-            company: '',
-            department: '',
-            designation: '',
-            address: '',
-            city: '',
-            state: '',
-            zipCode: '',
-            country: '',
-        });
-        setErrors({});
-        setSubmitted(false);
-    };
-
-    /**
-     * Render a form input field with error handling
-     */
-    const renderField = (name, label, type = 'text', placeholder = '') => (
-        <div className="form-group">
-            <label htmlFor={`reg-${name}`}>{label}</label>
-            <div className="input-wrapper">
-                <input
-                    id={`reg-${name}`}
-                    type={type}
-                    name={name}
-                    placeholder={placeholder || `Enter ${label}`}
-                    value={formData[name]}
-                    onChange={handleChange}
-                    className={errors[name] ? 'error' : ''}
-                />
-            </div>
-            {errors[name] && <p className="error-message">{errors[name]}</p>}
-        </div>
-    );
-
     return (
-        <>
-            <div className="page-header">
-                <h1>Registration Form</h1>
-                <p>Complete the form below to register</p>
-            </div>
-
-            <div className="registration-form-container">
-                {/* Success Message */}
-                {submitted && (
-                    <div
-                        style={{
-                            padding: '1rem 1.5rem',
-                            background: 'var(--success-bg)',
-                            color: 'var(--success)',
-                            borderRadius: 'var(--border-radius)',
-                            marginBottom: '1.25rem',
-                            fontWeight: 500,
-                            fontSize: '0.875rem',
-                            animation: 'fadeInUp 0.3s ease',
-                        }}
-                    >
-                        ✅ Registration submitted successfully!
+        <div className="registration-container">
+            <form className="modern-registration-form" onSubmit={handleSubmit}>
+                <div className="reg-grid">
+                    <div className="form-item">
+                        <label className="reg-label">Full Name*</label>
+                        <input
+                            type="text"
+                            name="fullName"
+                            placeholder="Full Name*"
+                            className={`reg-input ${errors.fullName ? 'error' : ''}`}
+                            value={formData.fullName}
+                            onChange={handleChange}
+                        />
                     </div>
-                )}
-
-                <form className="registration-form" onSubmit={handleSubmit} noValidate>
-                    {/* Personal Information */}
-                    <h3 className="card-title">Personal Information</h3>
-                    <div className="form-row">
-                        {renderField('firstName', 'First Name', 'text', 'Enter first name')}
-                        {renderField('lastName', 'Last Name', 'text', 'Enter last name')}
+                    <div className="form-item">
+                        <label className="reg-label">Email Address*</label>
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Email Address*"
+                            className={`reg-input ${errors.email ? 'error' : ''}`}
+                            value={formData.email}
+                            onChange={handleChange}
+                        />
                     </div>
-                    <div className="form-row">
-                        {renderField('email', 'Email', 'email', 'email@company.com')}
-                        {renderField('phone', 'Phone Number', 'tel', '+91 XXXXX XXXXX')}
+                    <div className="form-item">
+                        <label className="reg-label">Contact Number*</label>
+                        <input
+                            type="text"
+                            name="contactNumber"
+                            placeholder="Contact Number*"
+                            className={`reg-input ${errors.contactNumber ? 'error' : ''}`}
+                            value={formData.contactNumber}
+                            onChange={handleChange}
+                        />
                     </div>
-
-                    {/* Work Information */}
-                    <h3 className="card-title" style={{ marginTop: '1.5rem' }}>Work Information</h3>
-                    <div className="form-row">
-                        {renderField('company', 'Company', 'text', 'Company name')}
-                        {renderField('department', 'Department', 'text', 'Department name')}
-                    </div>
-                    <div className="form-row">
-                        {renderField('designation', 'Designation', 'text', 'Job title')}
-                        <div className="form-group">
-                            <label htmlFor="reg-country">Country</label>
-                            <div className="input-wrapper">
-                                <select
-                                    id="reg-country"
-                                    name="country"
-                                    value={formData.country}
-                                    onChange={handleChange}
-                                    style={{
-                                        width: '100%',
-                                        padding: '0.625rem 0.875rem',
-                                        border: '1px solid var(--border-color)',
-                                        borderRadius: 'var(--border-radius)',
-                                        fontSize: '0.875rem',
-                                        color: formData.country ? 'var(--text-primary)' : 'var(--text-muted)',
-                                        background: 'var(--bg-secondary)',
-                                        cursor: 'pointer',
-                                    }}
-                                >
-                                    <option value="">Select Country</option>
-                                    <option value="IN">India</option>
-                                    <option value="US">United States</option>
-                                    <option value="UK">United Kingdom</option>
-                                    <option value="AU">Australia</option>
-                                    <option value="CA">Canada</option>
-                                </select>
-                            </div>
+                    <div className="form-item">
+                        <label className="reg-label">Department*</label>
+                        <div className="select-wrapper">
+                            <select
+                                name="department"
+                                className={`reg-select ${errors.department ? 'error' : ''}`}
+                                value={formData.department}
+                                onChange={handleChange}
+                            >
+                                <option value="">Department</option>
+                                <option value="IT">IT</option>
+                                <option value="HR">HR</option>
+                                <option value="Finance">Finance</option>
+                            </select>
                         </div>
                     </div>
+                    <div className="form-item">
+                        <label className="reg-label">State*</label>
+                        <div className="select-wrapper">
+                            <select
+                                name="state"
+                                className={`reg-select ${errors.state ? 'error' : ''}`}
+                                value={formData.state}
+                                onChange={handleChange}
+                            >
+                                <option value="">State*</option>
+                                <option value="TN">Tamil Nadu</option>
+                                <option value="KA">Karnataka</option>
+                                <option value="MH">Maharashtra</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div className="form-item">
+                        <label className="reg-label">City*</label>
+                        <div className="select-wrapper">
+                            <select
+                                name="city"
+                                className={`reg-select ${errors.city ? 'error' : ''}`}
+                                value={formData.city}
+                                onChange={handleChange}
+                            >
+                                <option value="">City*</option>
+                                <option value="Chennai">Chennai</option>
+                                <option value="Bangalore">Bangalore</option>
+                                <option value="Mumbai">Mumbai</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
 
-                    {/* Address */}
-                    <h3 className="card-title" style={{ marginTop: '1.5rem' }}>Address</h3>
-                    <div className="form-group">
-                        <label htmlFor="reg-address">Street Address</label>
-                        <div className="input-wrapper">
+                <div className="form-item full-width" style={{ marginTop: '1.5rem' }}>
+                    <label className="reg-label">Address</label>
+                    <textarea
+                        name="address"
+                        placeholder="Address"
+                        className="reg-textarea"
+                        value={formData.address}
+                        onChange={handleChange}
+                    ></textarea>
+                </div>
+
+                <div className="form-item full-width" style={{ marginTop: '1.5rem' }}>
+                    <label className="reg-label">Currently Working or not</label>
+                    <div className="radio-group">
+                        <label className="radio-item">
                             <input
-                                id="reg-address"
-                                type="text"
-                                name="address"
-                                placeholder="Enter street address"
-                                value={formData.address}
+                                type="radio"
+                                name="currentlyWorking"
+                                value="yes"
+                                checked={formData.currentlyWorking === 'yes'}
                                 onChange={handleChange}
                             />
-                        </div>
+                            <span className="radio-circle"></span>
+                            yes
+                        </label>
+                        <label className="radio-item">
+                            <input
+                                type="radio"
+                                name="currentlyWorking"
+                                value="no"
+                                checked={formData.currentlyWorking === 'no'}
+                                onChange={handleChange}
+                            />
+                            <span className="radio-circle"></span>
+                            no
+                        </label>
                     </div>
-                    <div className="form-row">
-                        {renderField('city', 'City', 'text', 'Enter city')}
-                        {renderField('state', 'State', 'text', 'Enter state')}
-                    </div>
+                </div>
 
-                    {/* Actions */}
-                    <div className="form-actions">
-                        <button type="submit" className="btn-primary" style={{ width: 'auto' }}>
-                            Submit Registration
-                        </button>
-                        <button type="button" className="btn-secondary" onClick={handleReset}>
-                            Reset
-                        </button>
+                <div className="form-item full-width" style={{ marginTop: '1.5rem' }}>
+                    <label className="reg-label">Years of Experience</label>
+                    <div className="checkbox-group-vertical">
+                        <label className="check-item">
+                            <input
+                                type="checkbox"
+                                name="experience"
+                                value="1 year"
+                                checked={formData.experience.includes('1 year')}
+                                onChange={handleChange}
+                            />
+                            <span className="check-box"></span>
+                            1 year
+                        </label>
+                        <label className="check-item">
+                            <input
+                                type="checkbox"
+                                name="experience"
+                                value="2+ year"
+                                checked={formData.experience.includes('2+ year')}
+                                onChange={handleChange}
+                            />
+                            <span className="check-box"></span>
+                            2+ year
+                        </label>
+                        <label className="check-item">
+                            <input
+                                type="checkbox"
+                                name="experience"
+                                value="4+ year"
+                                checked={formData.experience.includes('4+ year')}
+                                onChange={handleChange}
+                            />
+                            <span className="check-box"></span>
+                            4+ year
+                        </label>
                     </div>
-                </form>
-            </div>
-        </>
+                </div>
+
+                <div className="form-actions-reg">
+                    <button type="submit" className="reg-submit-btn">Submit</button>
+                    {submitted && <span className="reg-success">Submitted Successfully!</span>}
+                </div>
+            </form>
+        </div>
     );
 };
 

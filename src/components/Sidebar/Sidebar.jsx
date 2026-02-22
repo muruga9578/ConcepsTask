@@ -84,24 +84,34 @@ const Sidebar = ({ collapsed, onToggle, mobileOpen, onCloseMobile }) => {
 
                 {/* Toggle Button */}
                 <button className="sidebar-toggle" onClick={onToggle} title="Toggle Sidebar">
-                    {collapsed ? '▶' : '◀'}
+                    {collapsed ? (
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    ) : (
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    )}
                 </button>
 
-                {/* Main Section */}
-                <div className="sidebar-section">
-                    {sidebarMenuItems.main.map(renderMenuItem)}
-                </div>
+                <div className="sidebar-content">
+                    {/* Main Section */}
+                    <div className="sidebar-section">
+                        {sidebarMenuItems.main.map(renderMenuItem)}
+                    </div>
 
-                {/* User Section */}
-                <div className="sidebar-section">
-                    <div className="sidebar-section-title">USER</div>
-                    {sidebarMenuItems.user.map(renderMenuItem)}
-                </div>
+                    {/* User Section */}
+                    <div className="sidebar-section">
+                        <div className="sidebar-section-title">USER</div>
+                        {sidebarMenuItems.user.map(renderMenuItem)}
+                    </div>
 
-                {/* Apps Section */}
-                <div className="sidebar-section">
-                    <div className="sidebar-section-title">APPS</div>
-                    {sidebarMenuItems.apps.map(renderMenuItem)}
+                    {/* Apps Section */}
+                    <div className="sidebar-section">
+                        <div className="sidebar-section-title">APPS</div>
+                        {sidebarMenuItems.apps.map(renderMenuItem)}
+                    </div>
                 </div>
             </aside>
         </>

@@ -8,6 +8,9 @@ import { Link, useNavigate } from 'react-router-dom';
 
 const SignIn = () => {
     const navigate = useNavigate();
+    const [view, setView] = useState('signin'); // 'signin' or 'forgot'
+    const [resetEmail, setResetEmail] = useState('');
+    const [resetSuccess, setResetSuccess] = useState(false);
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [errors, setErrors] = useState({});
     const [showPassword, setShowPassword] = useState(false);
@@ -54,6 +57,74 @@ const SignIn = () => {
             setErrors((prev) => ({ ...prev, [name]: '' }));
         }
     };
+
+    /**
+     * Handles the reset password "Send" action
+     */
+    const handleResetPassword = (e) => {
+        e.preventDefault();
+        if (resetEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(resetEmail)) {
+            setResetSuccess(true);
+            setTimeout(() => {
+                setResetSuccess(false);
+                setResetEmail('');
+                setView('signin');
+            }, 2000);
+        }
+    };
+
+    if (view === 'forgot') {
+        return (
+            <div className="auth-page">
+                <div className="auth-card">
+                    <h1>Forgot Password?</h1>
+                    <p className="subtitle">
+                        Enter your email to reset your password.
+                    </p>
+
+                    {resetSuccess && (
+                        <div style={{
+                            padding: '0.75rem',
+                            background: 'var(--success-bg)',
+                            color: 'var(--success)',
+                            borderRadius: 'var(--border-radius)',
+                            marginBottom: '1rem',
+                            fontSize: '0.875rem',
+                            fontWeight: 500
+                        }}>
+                            ✅ Reset link sent to your email!
+                        </div>
+                    )}
+
+                    <form onSubmit={handleResetPassword}>
+                        <div className="form-group">
+                            <label htmlFor="reset-email">Email</label>
+                            <div className="input-wrapper">
+                                <input
+                                    id="reset-email"
+                                    type="email"
+                                    placeholder="email@email.com"
+                                    value={resetEmail}
+                                    onChange={(e) => setResetEmail(e.target.value)}
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <button type="submit" className="btn-primary" style={{ marginBottom: '1rem' }}>
+                            Send
+                        </button>
+
+                        <p className="subtitle" style={{ textAlign: 'center', margin: 0 }}>
+                            <a href="#back" onClick={(e) => { e.preventDefault(); setView('signin'); }}>
+                                Back to Sign In
+                            </a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="auth-page">
@@ -107,7 +178,7 @@ const SignIn = () => {
                     <div className="form-group">
                         <div className="label-row">
                             <label htmlFor="signin-password">Password</label>
-                            <a href="#forgot" onClick={(e) => e.preventDefault()}>
+                            <a href="#forgot" onClick={(e) => { e.preventDefault(); setView('forgot'); }}>
                                 Forgot Password?
                             </a>
                         </div>

@@ -1,14 +1,42 @@
-/**
- * Header Component
- * Top navbar with breadcrumbs, actions, theme toggle, and user profile
- */
-import React from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 
 const Header = ({ onMobileMenuToggle }) => {
     const { theme, toggleTheme } = useTheme();
     const location = useLocation();
+    const navigate = useNavigate();
+    const [showUserDropdown, setShowUserDropdown] = useState(false);
+    const dropdownRef = useRef(null);
+
+    // Hardcoded user info for demo
+    const user = {
+        name: 'Ursua Amador',
+        email: 'ursua.amador@example.com',
+        initial: 'U'
+    };
+
+    /**
+     * Handle logout
+     */
+    const handleLogout = () => {
+        // Redirect to login page for demo
+        navigate('/login');
+    };
+
+    /**
+     * Close dropdown when clicking outside
+     */
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setShowUserDropdown(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     /**
      * Generate breadcrumb from current path
@@ -63,17 +91,57 @@ const Header = ({ onMobileMenuToggle }) => {
                 </button>
 
                 {/* Icon Buttons */}
-                <button className="header-icon-btn" title="Search">🔍</button>
-                <button className="header-icon-btn" title="Calendar">📅</button>
-                <button className="header-icon-btn" title="Messages">💬</button>
-                <button className="header-icon-btn" title="Apps">⊞</button>
+                <button className="header-icon-btn" title="Search">
+                    <img src="/assets/magnifier.png" alt="Search" />
+                </button>
+                <button className="header-icon-btn" title="Calendar">
+                    <img src="/assets/Union.png" alt="Calendar" />
+                </button>
+                <button className="header-icon-btn" title="Messages">
+                    <img src="/assets/messages.png" alt="Messages" />
+                </button>
+                <button className="header-icon-btn" title="Apps">
+                    <img src="/assets/dashboard.png" alt="Apps" />
+                </button>
 
-                {/* User Avatar */}
-                <div className="header-avatar" title="User Profile">
-                    U
+                {/* User Avatar & Dropdown */}
+                <div className="user-profile-wrapper" ref={dropdownRef}>
+                    <div
+                        className="header-avatar"
+                        title="User Profile"
+                        onClick={() => setShowUserDropdown(!showUserDropdown)}
+                    >
+                        {user.initial}
+                    </div>
+
+                    {showUserDropdown && (
+                        <div className="user-dropdown-menu">
+                            <div className="dropdown-user-info">
+                                <div className="dropdown-avatar">{user.initial}</div>
+                                <div className="user-details">
+                                    <span className="user-name">{user.name}</span>
+                                    <span className="user-email">{user.email}</span>
+                                </div>
+                            </div>
+                            <div className="dropdown-divider"></div>
+                            <button className="dropdown-item" onClick={() => navigate('/registration')}>
+                                <span className="item-icon">👤</span>
+                                My Profile
+                            </button>
+                            <button className="dropdown-item" onClick={() => setShowUserDropdown(false)}>
+                                <span className="item-icon">⚙️</span>
+                                Settings
+                            </button>
+                            <div className="dropdown-divider"></div>
+                            <button className="dropdown-item logout-btn" onClick={handleLogout}>
+                                <span className="item-icon">🚪</span>
+                                Logout
+                            </button>
+                        </div>
+                    )}
                 </div>
 
-                {/* View Profile */}
+                {/* View Profile Button - Hidden on mobile */}
                 <button className="view-profile-btn">View Profile</button>
             </div>
         </header>
