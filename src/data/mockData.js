@@ -286,11 +286,11 @@ export const sidebarMenuItems = {
     ],
     user: [
         { id: 'list', label: 'List', icon: '/assets/list_img.png', path: '/list' },
-        { id: 'public-profile', label: 'Public Profile', icon: '/assets/pub_pro_img.png', path: '#', badge: '+' },
-        { id: 'my-account', label: 'My Account', icon: '/assets/my_acc_img.png', path: '#', badge: '+' },
-        { id: 'community', label: 'Community', icon: '/assets/com_img.png', path: '#', badge: '+' },
-        { id: 'user-management', label: 'User Management', icon: '/assets/manage_img.png', path: '#', badge: '+' },
-        { id: 'authentication', label: 'Authentication', icon: '/assets/security-user.png', path: '#', badge: '+' },
+        { id: 'public-profile', label: 'Public Profile', icon: '/assets/pub_pro_img.png', path: '#', badge: '+', disabled: true },
+        { id: 'my-account', label: 'My Account', icon: '/assets/my_acc_img.png', path: '#', badge: '+', disabled: true },
+        { id: 'community', label: 'Community', icon: '/assets/com_img.png', path: '#', badge: '+', disabled: true },
+        { id: 'user-management', label: 'User Management', icon: '/assets/manage_img.png', path: '#', badge: '+', disabled: true },
+        { id: 'authentication', label: 'Authentication', icon: '/assets/security-user.png', path: '#', badge: '+', disabled: true },
     ],
     apps: [
         { id: 'store-client', label: 'Store Client', icon: '🛒', path: '/products', badge: '+' },

@@ -144,6 +144,17 @@
     font-weight: 500;
 }
 
+.sidebar-menu-item.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    filter: grayscale(1);
+}
+
+.sidebar-menu-item.disabled:hover {
+    background: transparent;
+    color: var(--text-sidebar);
+}
+
 .sidebar-menu-item .icon {
     width: 20px;
     height: 20px;

@@ -30,8 +30,7 @@ const Sidebar = ({ collapsed, onToggle, mobileOpen, onCloseMobile }) => {
             return (
                 <div
                     key={item.id}
-                    className={`sidebar-menu-item ${isActive ? 'active' : ''}`}
-                    style={{ opacity: 0.5, cursor: 'not-allowed' }}
+                    className={`sidebar-menu-item disabled ${isActive ? 'active' : ''}`}
                 >
                     <span className="icon">{renderIcon(item.icon)}</span>
                     <span>{item.label}</span>
